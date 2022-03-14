@@ -37,9 +37,7 @@ public class InferenceRequest {
             in.close();
 
             String predictionStr = response.toString();
-
             predictionStr = predictionStr.replace("[", "").replace("]", "");
-
             // Outputting the edges and inference to the DataStream
             return predictionStr;
         } else { //failed

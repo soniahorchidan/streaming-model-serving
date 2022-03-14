@@ -5,7 +5,7 @@ import torch
 
 import model
 
-MODEL_WEIGHTS = "../../../streaming-model-serving/models/feedforward/torch/ffnn.torch"
+MODEL_WEIGHTS = "/Users/sfhor/KTH/Programming/Git/streaming-model-serving/models/feedforward/torch/mnist-fashion/model-1/ffnn.torch"
 torch.set_num_threads(1)
 
 
@@ -47,4 +47,3 @@ class MNISTFashionClassifier(object):
             self.model.forward(images)
             fake_output = ["0"] * len(images)
             return [",".join(fake_output)]
-

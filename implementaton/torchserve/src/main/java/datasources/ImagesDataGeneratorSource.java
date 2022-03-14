@@ -14,7 +14,6 @@ public class ImagesDataGeneratorSource extends RichParallelSourceFunction<ArrayL
         this.generator = new ImagesDataGenerator(batchSize, experimentTimeInSeconds, warmupRequestsNum);
         // An input rate equal to 0 means that the source should not be throttled
         if (inputRate > 0) {
-            // TODO(sonia): no idea why, but the ThrottledIterator generates twice as much data as it should
             this.shouldBeThrottled = true;
             this.throttledIterator = new ThrottledIterator<>(generator, inputRate / 2);
         }

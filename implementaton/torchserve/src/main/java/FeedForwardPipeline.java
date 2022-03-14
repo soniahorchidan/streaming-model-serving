@@ -13,16 +13,17 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class FeedForwardPipeline {
+    private static final String TORCH_SERVING_URL = "http://127.0.0.1:8080/predictions/ffnn";
+    private static final int ASYNC_OPERATOR_CAPACITY = 10000;
+    private static final long ASYNC_OPERATOR_TIMEOUT = 10000;
 
     public static void run(int inputRate, int batchSize, int experimentTimeInSeconds, int warmUpRequestsNum,
                            boolean isAsync, int maxInputRatePerThread, String outputFile) throws Exception {
 
-        //final String DATASET = "FFNN";
         // set up the streaming execution environment
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         // Add data sources
-        // TODO(sonia): add different source based on dataset (DATASET.equals("FFNN"))
         int inputPotentialProducers = (int) Math.ceil((double) inputRate / maxInputRatePerThread);
         int inputProducers = inputPotentialProducers > 0 ? inputPotentialProducers : 1;
         int inputRatePerProducer = Math.min(inputRate, inputRate / inputProducers);
@@ -38,13 +39,12 @@ public class FeedForwardPipeline {
 
 
         // send inference request
-        DataStream<Tuple3<String, Long, Long>> results = null;
-        String torchURL = "http://127.0.0.1:8080/predictions/ffnn";
+        DataStream<Tuple3<String, Long, Long>> results;
         if (isAsync) {
-            results = performRequestAsync(torchURL, batches);
+            results = performRequestAsync(TORCH_SERVING_URL, batches);
         } else {
             // NOTE: output looks like (scoring_result, in_timestamp, out_timestamp)
-            results = performRequest(torchURL, batches);
+            results = performRequest(TORCH_SERVING_URL, batches);
         }
 
         // Benchmarking - record timestamp when the scoring is done
@@ -83,9 +83,7 @@ public class FeedForwardPipeline {
 
     private static DataStream<Tuple3<String, Long, Long>> performRequestAsync(String torchURL,
                                                                               DataStream<ArrayList<ArrayList<Float>>> batches) throws
-                                                                                                                                Exception {
-        int ASYNC_OPERATOR_CAPACITY = 10000;
-        long ASYNC_OPERATOR_TIMEOUT = 10000;
+                                                                                                                               Exception {
         AsyncInferenceRequest asyncFunction = new AsyncInferenceRequest(torchURL);
         DataStream<Tuple3<String, Long, Long>> results = AsyncDataStream.orderedWait(
                 batches,

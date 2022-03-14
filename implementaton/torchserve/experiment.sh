@@ -6,7 +6,7 @@
      -tmin_workers = minimum number of workers that will be used by PyTorch Serve for inference; defaults to 1 if not set
      -tmax_workers = maximum number of workers that will be used by PyTorch Serve for inference; defaults to 1 if not set
      -archive = archive the model (will delete the previous archive if already existed); defaults to false
-     -is_scalability_experiment = defaults to false
+     -is_scalability_experiment = runs scalability experiments; defaults to false
 
   EXECUTION EXAMPLE: ./experiment.sh -tmin_workers 2 -tmax_workers 2 -archive false -isScalabilityExperiment true
 
@@ -26,8 +26,8 @@ ARCHIVE=${archive:-false}
 IS_SCALABILITY=${is_scalability_experiment:-false}
 
 # Archive twitch model
-mkdir -p src/model_store
 if [[ $ARCHIVE == true ]]; then
+  mkdir -p model_store/
   ARCHIVED_TWITCH_MODEL_PATH=src/model_store/twitch-unsup-6-partitions.mar
   if test -f "$ARCHIVED_TWITCH_MODEL_PATH"; then
     echo "$ARCHIVED_TWITCH_MODEL_PATH already exists! Deleting existing model...."
@@ -36,7 +36,7 @@ if [[ $ARCHIVE == true ]]; then
   echo "Archiving model..."
   torch-model-archiver --model-name ffnn \
     --version 1.0 \
-    --serialized-file ../../models/feedforward/torch/ffnn.torch \
+    --serialized-file ../../models/feedforward/torch/mnist-fashion/model-1/ffnn.torch \
     --export-path model_store \
     --handler src/torch_serve_handler/feedforward/model_handler.py \
     --extra-files src/torch_serve_handler/feedforward/model.py

@@ -14,8 +14,10 @@ import java.util.Random;
 public class ImagesDataGenerator implements Iterator<ArrayList<ArrayList<Float>>>, Serializable {
     private static final Random rand = new Random();
     private static final int IMAGE_SIZE = 28;
+
     private final int batchSize;
-    private int experimentTime;
+    private final int experimentTime;
+
     private int warmupRequestsNum;
     private boolean finishedWarmUp;
     private long startTime;
@@ -37,8 +39,7 @@ public class ImagesDataGenerator implements Iterator<ArrayList<ArrayList<Float>>
                 this.startTime = System.currentTimeMillis();
             }
         } else {
-            if (System.currentTimeMillis() - startTime > experimentTime)
-                return false;
+            return System.currentTimeMillis() - startTime <= experimentTime;
         }
         return true;
     }
@@ -73,9 +74,9 @@ public class ImagesDataGenerator implements Iterator<ArrayList<ArrayList<Float>>
     }
 
     public static DataStream<ArrayList<ArrayList<Float>>> getSource(StreamExecutionEnvironment env,
-                                                                     int batchSize,
-                                                                     int experimentTimeInSeconds,
-                                                                     int warmupRequestsNum) {
+                                                                    int batchSize,
+                                                                    int experimentTimeInSeconds,
+                                                                    int warmupRequestsNum) {
         return env.fromCollection(new ImagesDataGenerator(batchSize, experimentTimeInSeconds, warmupRequestsNum),
                                   TypeInformation.of(new TypeHint<ArrayList<ArrayList<Float>>>() {}));
     }
