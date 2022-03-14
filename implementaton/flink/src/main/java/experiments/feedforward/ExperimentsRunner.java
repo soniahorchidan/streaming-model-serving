@@ -9,6 +9,7 @@ import java.util.Properties;
 
 public class ExperimentsRunner {
     public static void main(String[] args) throws Exception {
+        String embeddedApproach = args.length > 0 ? args[0] : "onnx";
         // Load common configs
         InputStream commonExperimentConfig = new FileInputStream("expconfigs/common.properties");
         Properties commonProps = new Properties();
@@ -18,26 +19,29 @@ public class ExperimentsRunner {
         int warmupRequestsNum = Integer.parseInt(commonProps.getProperty("warmup_requests_num"));
         int maxInputRatePerThread = Integer.parseInt(commonProps.getProperty("max_input_rate_per_thread"));
 
+        System.out.println("\n\n\nStarting experiments for " + embeddedApproach + "...");
         for (int experimentNum = 0; experimentNum < experimentRuns; experimentNum++) {
             System.out.println("=====================INPUT RATE EXPERIMENT " + experimentNum + "=====================");
-            runOpenLoopExperiment(experimentTimeInSeconds, warmupRequestsNum, maxInputRatePerThread);
+            runOpenLoopExperiment(experimentTimeInSeconds, warmupRequestsNum, maxInputRatePerThread, embeddedApproach);
             System.out.println("====================================END======================================\n\n");
             Thread.sleep(5000);
 
-            System.out.println("=====================BATCH SIZE EXPERIMENT " + experimentNum + "=====================");
-            runCloseLoopExperiment(experimentTimeInSeconds, warmupRequestsNum, maxInputRatePerThread);
-            System.out.println("====================================END======================================\n\n");
-            Thread.sleep(5000);
-
-            System.out.println("====================SCALABILITY EXPERIMENT " + experimentNum + "=====================");
-            runScalabilityExperiment(experimentTimeInSeconds, warmupRequestsNum, maxInputRatePerThread);
-            System.out.println("====================================END======================================\n\n");
-            Thread.sleep(5000);
+            //System.out.println("=====================BATCH SIZE EXPERIMENT " + experimentNum + "=====================");
+            //runCloseLoopExperiment(experimentTimeInSeconds, warmupRequestsNum, maxInputRatePerThread, embeddedApproach);
+            //System.out.println("====================================END======================================\n\n");
+            //Thread.sleep(5000);
+            //
+            //System.out.println("====================SCALABILITY EXPERIMENT " + experimentNum + "=====================");
+            //runScalabilityExperiment(experimentTimeInSeconds, warmupRequestsNum, maxInputRatePerThread,
+            //                         embeddedApproach);
+            //System.out.println("====================================END======================================\n\n");
+            //Thread.sleep(5000);
         }
+        System.out.println("\n\n\nFinished experiments for " + embeddedApproach + "!");
     }
 
     private static void runOpenLoopExperiment(int experimentTimeInSeconds, int warmupRequestsNum,
-                                              int maxInputRatePerThread) throws Exception {
+                                              int maxInputRatePerThread, String embeddedApproach) throws Exception {
         InputStream specificExperimentConfig = new FileInputStream("expconfigs/input-rate-exp-config.properties");
         Properties props = new Properties();
         props.load(specificExperimentConfig);
@@ -50,17 +54,18 @@ public class ExperimentsRunner {
             System.out.println("****************START EXPERIMENT****************");
             System.out.println("INPUT RATE = " + inputRate);
             System.out.println("************************************************");
-            String outputFile = generateOutputFileName("input-rate", inputRate, modelReplicas, batchSize);
+            String outputFile = generateOutputFileName("input-rate", inputRate, modelReplicas, batchSize,
+                                                       embeddedApproach);
             FeedForwardPipeline
                     .run(inputRate, batchSize, experimentTimeInSeconds, modelReplicas, warmupRequestsNum,
-                         maxInputRatePerThread, outputFile);
+                         maxInputRatePerThread, outputFile, embeddedApproach);
             System.out.println("****************END EXPERIMENT****************\n");
         }
     }
 
 
     private static void runCloseLoopExperiment(int experimentTimeInSeconds, int warmupRequestsNum,
-                                               int maxInputRatePerThread) throws Exception {
+                                               int maxInputRatePerThread, String embeddedApproach) throws Exception {
         InputStream specificExperimentConfig = new FileInputStream("expconfigs/batch-size-exp-config.properties");
         Properties props = new Properties();
         props.load(specificExperimentConfig);
@@ -73,17 +78,18 @@ public class ExperimentsRunner {
             System.out.println("****************START EXPERIMENT****************");
             System.out.println("BATCH SIZE = " + batchSize);
             System.out.println("************************************************");
-            String outputFile = generateOutputFileName("batch-size", inputRate, modelReplicas, batchSize);
+            String outputFile = generateOutputFileName("batch-size", inputRate, modelReplicas, batchSize,
+                                                       embeddedApproach);
             FeedForwardPipeline
                     .run(inputRate, batchSize, experimentTimeInSeconds, modelReplicas, warmupRequestsNum,
-                         maxInputRatePerThread, outputFile);
+                         maxInputRatePerThread, outputFile, embeddedApproach);
             System.out.println("****************END EXPERIMENT****************\n");
         }
     }
 
     private static void runScalabilityExperiment(int experimentTimeInSeconds, int warmupRequestsNum,
-                                                 int maxInputRatePerThread) throws
-                                                                            Exception {
+                                                 int maxInputRatePerThread, String embeddedApproach) throws
+                                                                                                     Exception {
         InputStream specificExperimentConfig = new FileInputStream("expconfigs/scalability-exp-config.properties");
         Properties props = new Properties();
         props.load(specificExperimentConfig);
@@ -96,19 +102,21 @@ public class ExperimentsRunner {
             System.out.println("****************START EXPERIMENT****************");
             System.out.println("MODEL REPLICAS = " + modelReplicas);
             System.out.println("************************************************");
-            String outputFile = generateOutputFileName("scalability", inputRate, modelReplicas, batchSize);
+            String outputFile = generateOutputFileName("scalability", inputRate, modelReplicas, batchSize,
+                                                       embeddedApproach);
             FeedForwardPipeline
                     .run(inputRate, batchSize, experimentTimeInSeconds, modelReplicas, warmupRequestsNum,
-                         maxInputRatePerThread, outputFile);
+                         maxInputRatePerThread, outputFile, embeddedApproach);
             System.out.println("****************END EXPERIMENT****************\n");
         }
     }
 
     private static String generateOutputFileName(String experimentName, int inputRate, int modelReplicas,
-                                                 int batchSize) {
+                                                 int batchSize, String embeddedApproach) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss");
         Date date = new Date();
-        return "./experiments-results/" + experimentName + "/" + formatter.format(date) + "-ir" + inputRate + "_bs" +
+        return "./" + embeddedApproach + "-experiments-results/" + experimentName + "/" + formatter.format(date) +
+               "-ir" + inputRate + "_bs" +
                batchSize + "_rep" + modelReplicas + ".csv";
     }
 }

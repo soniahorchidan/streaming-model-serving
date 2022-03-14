@@ -1,0 +1,2 @@
+model.type: "nd4j"
+model.path: "../../models/feedforward/npy/mnist-fashion/model-1/"

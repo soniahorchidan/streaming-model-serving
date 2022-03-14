@@ -17,17 +17,17 @@ import processing.feedforward.FeedForwardInferenceFunction;
 import java.util.ArrayList;
 
 public class FeedForwardPipeline {
-    private static final ServingConfig SERVING_CONFIG = new ServingConfig("/onnx-ff-serving-config.yaml",
-                                                                          ServingDefaultOptions.configs);
-
     public static void run(int inputRate, int batchSize, int experimentTimeInSeconds,
                            int modelReplicas, int warmUpRequestsNum, int maxInputRatePerThread,
-                           String outputFile) throws Exception {
+                           String outputFile, String modelType) throws Exception {
         Configuration configuration = new Configuration();
         configuration.setString("taskmanager.memory.process.size", "32GB");
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironment(configuration);
         env.getConfig().registerKryoType(ONNXModel.class);
         env.getConfig().registerKryoType(TensorflowModel.class);
+
+        ServingConfig servingConfig = new ServingConfig("/" + modelType + "-ff-serving-config.yaml",
+                                                        ServingDefaultOptions.configs);
 
         // ========================================== Input Reading ==========================================
         // Read the input data stream
@@ -46,7 +46,7 @@ public class FeedForwardPipeline {
         // ========================================== Model Scoring ==========================================
         // <[scoring-result], in_timestamp, out_timestamp>
         SingleOutputStreamOperator<Tuple3<ArrayList<ArrayList<Float>>, Long, Long>> scoring = batches
-                .process(new FeedForwardInferenceFunction(SERVING_CONFIG))
+                .process(new FeedForwardInferenceFunction(servingConfig))
                 .setParallelism(modelReplicas);
 
         // ========================================== Benchmarking ==========================================

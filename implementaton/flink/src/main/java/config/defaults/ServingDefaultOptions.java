@@ -11,7 +11,6 @@ public class ServingDefaultOptions {
 
     static {
         configs.add(new ConfigOption<>("model.path", ""));
-        configs.add(new ConfigOption<>("initial.model.path", ""));
         configs.add(new ConfigOption<>("model.type", ""));
     }
 }

@@ -21,7 +21,7 @@ public class FeedForwardInferenceFunction
     private ScoringFunction scoringFunction;
 
     public FeedForwardInferenceFunction(ServingConfig servingConfig) {
-        this.initialModelPath = (String) servingConfig.getParam("initial.model.path");
+        this.initialModelPath = (String) servingConfig.getParam("model.path");
 
         this.modelType = (String) servingConfig.getParam("model.type");
         if (this.modelType.equals("nd4j")) {
