@@ -13,9 +13,8 @@ def list_dirs(dir):
 
 
 CURRENT_DIR = "./experiments-results"
-# directory = os.fsencode(CURRENT_DIR)
 
-with open("src/main/java/expconfigs/common.properties") as f:
+with open("expconfigs/common.properties") as f:
     l = [line.split("=") for line in f.readlines()]
     configs = {key.strip(): value.strip() for key, value in l}
     duration = int(configs['experiment_time_in_seconds'])
@@ -29,7 +28,6 @@ for directory in list_dirs(CURRENT_DIR):
     experiment_results = {}
     print("\n\n==================== RESULTS FOR " + os.path.basename(directory) + " EXPERIMENT ======================")
     for file in os.listdir(directory):
-        # print("------------ EXPERIMENT " + str(experiment_num) + " ------------")
         experiment_num += 1
         filename = os.fsdecode(file)
         # print("FILE NAME: " + filename)
@@ -56,8 +54,6 @@ for directory in list_dirs(CURRENT_DIR):
         # print("TOTAL PROCESSED REQUESTS: " + str(processed_requests) + "\n")
 
         times.sort(key=lambda x: x[1])
-        # Compute average latency
-        latencies = []
         failed_req_num = 0
         for t in times:
             if t[0] != -1:
@@ -78,6 +74,8 @@ for directory in list_dirs(CURRENT_DIR):
         experiment_results[exp_footprint].setdefault("avg_throughput", []).append(avg_throughput)
         # print("Average throughput (scorings/sec): " + str(avg_throughput))
 
+        # Compute average latency
+        latencies = []
         series = pd.Series(latencies)
         latency_res = series.mean()
         experiment_results[exp_footprint].setdefault("avg_latency", []).append(latency_res)

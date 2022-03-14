@@ -45,7 +45,6 @@ public class InferenceRequest {
             // Outputting the edges and inference to the DataStream
             return predictionStr;
         } else { //failed
-            System.out.println(connection.getResponseCode());
             System.out.println("POST request failed! " + connection.getResponseCode());
         }
         return null;

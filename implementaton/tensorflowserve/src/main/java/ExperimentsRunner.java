@@ -8,8 +8,7 @@ import java.util.Properties;
 public class ExperimentsRunner {
     public static void main(String[] args) throws Exception {
         // Load common configs
-        InputStream commonExperimentConfig = new FileInputStream(
-                "src/main/java/expconfigs/common.properties");
+        InputStream commonExperimentConfig = new FileInputStream("expconfigs/common.properties");
         Properties commonProps = new Properties();
         commonProps.load(commonExperimentConfig);
         int experimentRuns = Integer.parseInt(commonProps.getProperty("experiment_runs"));
@@ -48,8 +47,7 @@ public class ExperimentsRunner {
      */
     private static void runOpenLoopExperiment(int experimentTimeInSeconds, int warmupRequestsNum,
                                               int maxInputRatePerThread) throws Exception {
-        InputStream specificExperimentConfig = new FileInputStream(
-                "src/main/java/expconfigs/input-rate-exp-config.properties");
+        InputStream specificExperimentConfig = new FileInputStream("expconfigs/input-rate-exp-config.properties");
         Properties props = new Properties();
         props.load(specificExperimentConfig);
         int batchSize = Integer.parseInt(props.getProperty("batch_size"));
@@ -81,8 +79,7 @@ public class ExperimentsRunner {
      */
     private static void runCloseLoopExperiment(int experimentTimeInSeconds, int warmupRequestsNum,
                                                int maxInputRatePerThread) throws Exception {
-        InputStream specificExperimentConfig = new FileInputStream(
-                "src/main/java/expconfigs/batch-size-exp-config.properties");
+        InputStream specificExperimentConfig = new FileInputStream("expconfigs/batch-size-exp-config.properties");
         Properties props = new Properties();
         props.load(specificExperimentConfig);
         int modelReplicas = Integer.parseInt(props.getProperty("model_replicas"));
@@ -106,8 +103,7 @@ public class ExperimentsRunner {
     private static void runScalabilityExperiment(int experimentTimeInSeconds, int warmupRequestsNum,
                                                  int maxInputRatePerThread, int modelReplicas) throws
                                                                                                Exception {
-        InputStream specificExperimentConfig = new FileInputStream(
-                "src/main/java/expconfigs/scalability-exp-config.properties");
+        InputStream specificExperimentConfig = new FileInputStream("expconfigs/scalability-exp-config.properties");
         Properties props = new Properties();
         props.load(specificExperimentConfig);
         int batchSize = Integer.parseInt(props.getProperty("batch_size"));
@@ -115,7 +111,7 @@ public class ExperimentsRunner {
         System.out.println("MODEL REPLICAS = " + modelReplicas);
         String outputFile = generateOutputFileName("scalability", inputRate, modelReplicas, batchSize);
         FeedForwardPipeline
-                .run(inputRate, batchSize, experimentTimeInSeconds, warmupRequestsNum,true, maxInputRatePerThread,
+                .run(inputRate, batchSize, experimentTimeInSeconds, warmupRequestsNum, true, maxInputRatePerThread,
                      outputFile);
         Thread.sleep(10000);
     }

@@ -8,27 +8,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 
-/**
- * This AsyncIO function sends requests to Tensorflow API via the POST method, receives the results as an input
- * stream and parse the stream into a DataStream of Tuple3.
- */
-
-/**
- * This AsyncIO function sends requests to TorchServe API via the POST method, receives the results as an input
- * stream and parse the stream into a DataStream of Tuple3.
- */
 
 public class AsyncInferenceRequest
         extends RichAsyncFunction<ArrayList<ArrayList<Float>>, Tuple3<String, Long, Long>> {
-
     private final URL url;
 
-    /**
-     * Sends requests to TorchServe Inference API
-     *
-     * @param url The port where TorchServe Inference API is listening from.
-     * @throws Exception
-     */
     public AsyncInferenceRequest(String url) throws Exception {
         // Create a neat value object to hold the URL
         this.url = new URL(url);

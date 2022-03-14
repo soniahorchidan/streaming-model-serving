@@ -24,7 +24,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Move to docker file path 
-PTH='src/tensorflow_serve_handler/feedforward/docker/28x28'
+PTH='src/tensorflow_serve_handler/feedforward/docker/mnist-fashion'
 cd $PTH
 
 # Scale Tensorflow Model Serving workers
@@ -33,7 +33,6 @@ echo "Scaling the number of parallel threads used for serving to '$MODEL_REPLICA
 MAX_CPU="$(($MODEL_REPLICAS - 1))"
 echo "Used CPU cores: 0-$MAX_CPU"
 sed -i "s/cpuset: '[^']*'/cpuset: '0-$MAX_CPU'/g" docker-compose.yml
-
 
 # Start Tensorflow Model Serving
 echo "========================================================="

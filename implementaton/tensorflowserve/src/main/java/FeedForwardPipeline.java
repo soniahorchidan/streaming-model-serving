@@ -13,11 +13,12 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class FeedForwardPipeline {
+    private static final String TENSORFLOW_URL = "http://127.0.0.1:8501/v1/models/FFNN:predict";
+    private static final int ASYNC_OPERATOR_CAPACITY = 10000;
+    private static final long ASYNC_OPERATOR_TIMEOUT = 10000;
 
     public static void run(int inputRate, int batchSize, int experimentTimeInSeconds, int warmUpRequestsNum,
                            boolean isAsync, int maxInputRatePerThread, String outputFile) throws Exception {
-
-        //final String DATASET = "FFNN";
         // set up the streaming execution environment
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
@@ -27,7 +28,6 @@ public class FeedForwardPipeline {
         int inputRatePerProducer = Math.min(inputRate, inputRate / inputProducers);
         System.out.println("Input producers: " + inputProducers);
         System.out.println("Input rate per producer: " + inputRatePerProducer);
-
         env.setParallelism(inputProducers);
 
         DataStream<ArrayList<ArrayList<Float>>> batches = env
@@ -36,14 +36,12 @@ public class FeedForwardPipeline {
                                                       inputRatePerProducer));
 
         // send inference request
-        DataStream<Tuple3<String, Long, Long>> results = null;
+        DataStream<Tuple3<String, Long, Long>> results;
         // Fetch inference from Tensorflow server
-        String tensorflowURL = "http://127.0.0.1:8501/v1/models/FFNN:predict";
         if (isAsync) {
-            results = performRequestAsync(tensorflowURL, batches);
+            results = performRequestAsync(TENSORFLOW_URL, batches);
         } else {
-            // NOTE: output looks like (scoring_result, in_timestamp, out_timestamp)
-            results = performRequest(tensorflowURL, batches);
+            results = performRequest(TENSORFLOW_URL, batches);
         }
 
         // Benchmarking - record timestamp when the scoring is done
@@ -82,9 +80,7 @@ public class FeedForwardPipeline {
 
     private static DataStream<Tuple3<String, Long, Long>> performRequestAsync(String tensorflowURL,
                                                                               DataStream<ArrayList<ArrayList<Float>>> batches) throws
-                                                                                                                                Exception {
-        int ASYNC_OPERATOR_CAPACITY = 10000;
-        long ASYNC_OPERATOR_TIMEOUT = 10000;
+                                                                                                                               Exception {
         AsyncInferenceRequest asyncFunction = new AsyncInferenceRequest(tensorflowURL);
         DataStream<Tuple3<String, Long, Long>> results = AsyncDataStream.orderedWait(
                 batches,

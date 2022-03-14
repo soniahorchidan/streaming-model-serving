@@ -226,3 +226,4 @@ cython_debug/
 
 logs/
 model_store/
+logs.txt
