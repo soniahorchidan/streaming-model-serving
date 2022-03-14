@@ -1,2 +1,2 @@
-model.type: "tensorflow"
-model.path: "../../models/feedforward/tensorflow/mnist-fashion/model-1/"
+model.type: "onnx"
+model.path: "../../models/feedforward/onnx/mnist-fashion/model-1/"
