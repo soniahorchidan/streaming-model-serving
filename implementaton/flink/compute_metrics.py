@@ -11,11 +11,10 @@ def list_dirs(dir):
             r.append(os.path.join(root, name))
     return r
 
-# TODO(sonia): pass it as command line argument so we can run it on the graph model as well
-CURRENT_DIR = "./experiments-results"
-# directory = os.fsencode(CURRENT_DIR)
 
-with open("src/main/java/experiments/feedforward/configs/common.properties") as f:
+CURRENT_DIR = "./experiments-results"
+
+with open("expconfigs/common.properties") as f:
     l = [line.split("=") for line in f.readlines()]
     configs = {key.strip(): value.strip() for key, value in l}
     duration = int(configs['experiment_time_in_seconds'])
@@ -29,10 +28,8 @@ for directory in list_dirs(CURRENT_DIR):
     experiment_results = {}
     print("\n\n==================== RESULTS FOR " + os.path.basename(directory) + " EXPERIMENT ======================")
     for file in os.listdir(directory):
-        # print("------------ EXPERIMENT " + str(experiment_num) + " ------------")
         experiment_num += 1
         filename = os.fsdecode(file)
-        # print("FILE NAME: " + filename)
         file_path = os.path.join(directory, filename)
         times = []
         with open(file_path) as f_in:
@@ -55,7 +52,6 @@ for directory in list_dirs(CURRENT_DIR):
         # print("MODEL REPLICAS: " + str(model_replicas))
         # print("TOTAL PROCESSED REQUESTS: " + str(processed_requests) + "\n")
 
-        # Compute average throughput
         times.sort(key=lambda x: x[1])
         total_time_nanoseconds = times[-1][1] - times[0][1]
         total_time_seconds = total_time_nanoseconds / 1000000000
@@ -66,10 +62,6 @@ for directory in list_dirs(CURRENT_DIR):
 
         # Compute average latency
         latencies = []
-        for t in times:
-            # convert nanoseconds to milliseconds
-            latencies.append((t[-1] - t[0]) / 1000000)
-
         series = pd.Series(latencies)
         latency_res = series.mean()
         experiment_results[exp_footprint].setdefault("avg_latency", []).append(latency_res)

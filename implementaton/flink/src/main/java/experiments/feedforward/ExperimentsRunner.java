@@ -10,8 +10,7 @@ import java.util.Properties;
 public class ExperimentsRunner {
     public static void main(String[] args) throws Exception {
         // Load common configs
-        InputStream commonExperimentConfig = new FileInputStream(
-                "src/main/java/experiments/feedforward/configs/common.properties");
+        InputStream commonExperimentConfig = new FileInputStream("expconfigs/common.properties");
         Properties commonProps = new Properties();
         commonProps.load(commonExperimentConfig);
         int experimentRuns = Integer.parseInt(commonProps.getProperty("experiment_runs"));
@@ -23,23 +22,23 @@ public class ExperimentsRunner {
             System.out.println("=====================INPUT RATE EXPERIMENT " + experimentNum + "=====================");
             runOpenLoopExperiment(experimentTimeInSeconds, warmupRequestsNum, maxInputRatePerThread);
             System.out.println("====================================END======================================\n\n");
+            Thread.sleep(5000);
 
-            // NOTE: we simulate the close loop experiment it with very low input rate to ensure that the next operator
-            // has time to finish
             System.out.println("=====================BATCH SIZE EXPERIMENT " + experimentNum + "=====================");
             runCloseLoopExperiment(experimentTimeInSeconds, warmupRequestsNum, maxInputRatePerThread);
             System.out.println("====================================END======================================\n\n");
+            Thread.sleep(5000);
 
             System.out.println("====================SCALABILITY EXPERIMENT " + experimentNum + "=====================");
             runScalabilityExperiment(experimentTimeInSeconds, warmupRequestsNum, maxInputRatePerThread);
             System.out.println("====================================END======================================\n\n");
+            Thread.sleep(5000);
         }
     }
 
     private static void runOpenLoopExperiment(int experimentTimeInSeconds, int warmupRequestsNum,
                                               int maxInputRatePerThread) throws Exception {
-        InputStream specificExperimentConfig = new FileInputStream(
-                "src/main/java/experiments/feedforward/configs/input-rate-exp-config.properties");
+        InputStream specificExperimentConfig = new FileInputStream("expconfigs/input-rate-exp-config.properties");
         Properties props = new Properties();
         props.load(specificExperimentConfig);
         int batchSize = Integer.parseInt(props.getProperty("batch_size"));
@@ -56,15 +55,13 @@ public class ExperimentsRunner {
                     .run(inputRate, batchSize, experimentTimeInSeconds, modelReplicas, warmupRequestsNum,
                          maxInputRatePerThread, outputFile);
             System.out.println("****************END EXPERIMENT****************\n");
-            Thread.sleep(10000);
         }
     }
 
 
     private static void runCloseLoopExperiment(int experimentTimeInSeconds, int warmupRequestsNum,
                                                int maxInputRatePerThread) throws Exception {
-        InputStream specificExperimentConfig = new FileInputStream(
-                "src/main/java/experiments/feedforward/configs/batch-size-exp-config.properties");
+        InputStream specificExperimentConfig = new FileInputStream("expconfigs/batch-size-exp-config.properties");
         Properties props = new Properties();
         props.load(specificExperimentConfig);
         int inputRate = Integer.parseInt(props.getProperty("input_rate"));
@@ -81,15 +78,13 @@ public class ExperimentsRunner {
                     .run(inputRate, batchSize, experimentTimeInSeconds, modelReplicas, warmupRequestsNum,
                          maxInputRatePerThread, outputFile);
             System.out.println("****************END EXPERIMENT****************\n");
-            Thread.sleep(10000);
         }
     }
 
     private static void runScalabilityExperiment(int experimentTimeInSeconds, int warmupRequestsNum,
                                                  int maxInputRatePerThread) throws
                                                                             Exception {
-        InputStream specificExperimentConfig = new FileInputStream(
-                "src/main/java/experiments/feedforward/configs/scalability-exp-config.properties");
+        InputStream specificExperimentConfig = new FileInputStream("expconfigs/scalability-exp-config.properties");
         Properties props = new Properties();
         props.load(specificExperimentConfig);
         int inputRate = Integer.parseInt(props.getProperty("input_rate"));
@@ -106,7 +101,6 @@ public class ExperimentsRunner {
                     .run(inputRate, batchSize, experimentTimeInSeconds, modelReplicas, warmupRequestsNum,
                          maxInputRatePerThread, outputFile);
             System.out.println("****************END EXPERIMENT****************\n");
-            Thread.sleep(10000);
         }
     }
 

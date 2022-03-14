@@ -15,8 +15,10 @@ import java.util.Random;
 public class ImagesDataGenerator implements Iterator<Tuple2<ArrayList<ArrayList<Float>>, Long>>, Serializable {
     private static final Random rand = new Random();
     private static final int IMAGE_SIZE = 28;
+
     private final int batchSize;
-    private int experimentTime;
+    private final int experimentTime;
+
     private int warmupRequestsNum;
     private boolean finishedWarmUp;
     private long startTime;

@@ -8,7 +8,6 @@ public class FeedForwardND4JModel extends ND4JModel<INDArray, INDArray> {
     public INDArray apply(INDArray input) throws Exception {
         INDArray intermediary = input;
         for (int i = 0; i < this.layers.length; i++) {
-            //Nd4j.setDataType(DataType.DOUBLE);
             INDArray output = this.layers[i].apply(intermediary);
             intermediary = output;
         }

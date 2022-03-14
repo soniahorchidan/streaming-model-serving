@@ -37,42 +37,12 @@ public class FeedForwardInferenceFunction
 
     @Override
     public void open(Configuration parameters) throws Exception {
-        // load model
         this.scoringFunction.load(this.initialModelPath);
     }
-
-
-    //@Override
-    //public void processElement(Tuple2<ArrayList<ArrayList<Float>>, Long> inputBatches, ReadOnlyContext readOnlyContext,
-    //                           Collector<Tuple3<ArrayList<ArrayList<Float>>, Long, Long>> collector) throws
-    //                                                                                                  Exception {
-    //    // run inference on input
-    //    ArrayList<ArrayList<Float>> batchedResult = new ArrayList<>();
-    //    for (ArrayList<Float> input : inputBatches.f0) {
-    //        ArrayList<Float> result = null;
-    //        if (this.modelType.equals("nd4j")) {
-    //            result = ((FeedForwardND4JScoring) this.scoringFunction).processElement(input);
-    //        } else if (modelType.equals("onnx")) {
-    //            result = ((ONNXScoring) this.scoringFunction).processElement(input);
-    //        }
-    //        batchedResult.add(result);
-    //    }
-    //    collector.collect(new Tuple3<>(batchedResult, inputBatches.f1, System.nanoTime()));
-    //}
-
-
-    //@Override
-    //public void processBroadcastElement(GenericModel genericModel, Context context,
-    //                                    Collector<Tuple3<ArrayList<ArrayList<Float>>, Long, Long>> collector) throws
-    //                                                                                                           Exception {
-    //    // update model when a new one arrives
-    //    this.scoringFunction.updateModel(genericModel);
-    //}
 
     @Override
     public void processElement(Tuple2<ArrayList<ArrayList<Float>>, Long> inputBatches, Context context,
                                Collector<Tuple3<ArrayList<ArrayList<Float>>, Long, Long>> collector) throws Exception {
-        // run inference on input
         ArrayList<ArrayList<Float>> result = null;
         if (this.modelType.equals("nd4j")) {
             result = ((FeedForwardND4JScoring) this.scoringFunction).processElement(inputBatches.f0);

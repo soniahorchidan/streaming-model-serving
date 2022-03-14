@@ -10,8 +10,7 @@ import java.util.ArrayList;
 
 public class TensorflowModel extends GenericModel<ArrayList<ArrayList<Float>>, ArrayList<ArrayList<Float>>>
         implements Serializable {
-
-    public Session s = null;
+    private Session s = null;
 
     @Override
     public void loadModel(String modelPath) throws Exception {

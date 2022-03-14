@@ -7,7 +7,7 @@ import org.apache.flink.streaming.examples.utils.ThrottledIterator;
 import java.util.ArrayList;
 
 public class ImagesDataGeneratorSource extends RichParallelSourceFunction<Tuple2<ArrayList<ArrayList<Float>>, Long>> {
-    private ImagesDataGenerator generator;
+    private final ImagesDataGenerator generator;
     private ThrottledIterator<Tuple2<ArrayList<ArrayList<Float>>, Long>> throttledIterator;
     private boolean shouldBeThrottled = false;
 
@@ -15,7 +15,6 @@ public class ImagesDataGeneratorSource extends RichParallelSourceFunction<Tuple2
         this.generator = new ImagesDataGenerator(batchSize, experimentTimeInSeconds, warmupRequestsNum);
         // An input rate equal to 0 means that the source should not be throttled
         if (inputRate > 0) {
-            // TODO(sonia): no idea why, but the ThrottledIterator generates twice as much data as it should
             this.shouldBeThrottled = true;
             this.throttledIterator = new ThrottledIterator<>(generator, inputRate / 2);
         }

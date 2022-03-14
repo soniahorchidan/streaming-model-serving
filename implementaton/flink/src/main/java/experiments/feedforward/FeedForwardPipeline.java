@@ -3,12 +3,12 @@ package experiments.feedforward;
 import config.ServingConfig;
 import config.defaults.ServingDefaultOptions;
 import inference.onnx.ONNXModel;
-import org.apache.flink.configuration.Configuration;
 import inference.tensorflow.TensorflowModel;
 import input.data.feedforward.ImagesDataGeneratorSource;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
+import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -17,7 +17,7 @@ import processing.feedforward.FeedForwardInferenceFunction;
 import java.util.ArrayList;
 
 public class FeedForwardPipeline {
-    private static final ServingConfig SERVING_CONFIG = new ServingConfig("/feedforward_serving_config.yaml",
+    private static final ServingConfig SERVING_CONFIG = new ServingConfig("/onnx-ff-serving-config.yaml",
                                                                           ServingDefaultOptions.configs);
 
     public static void run(int inputRate, int batchSize, int experimentTimeInSeconds,

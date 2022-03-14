@@ -1,6 +1,5 @@
 package inference.onnx;
 
-import inference.commons.GenericModel;
 import inference.commons.ScoringFunction;
 
 import java.util.ArrayList;
@@ -21,11 +20,5 @@ public class ONNXScoring extends ScoringFunction<ArrayList<ArrayList<Float>>, Ar
             batchedResult.add(this.model.apply(input));
         }
         return batchedResult;
-    }
-
-    @Override
-    public void updateModel(GenericModel genericModel) {
-        // TODO(sonia): implement ONNX model updates
-        System.out.println("Model update detected!" + genericModel);
     }
 }

@@ -11,11 +11,8 @@ import java.util.Map;
 public class ServingConfig<T> {
     private HashMap<String, ConfigOption<?>> configs = new HashMap<>();
 
-    // TODO(sonia): use an ENUM here instead of the list of configs
     public ServingConfig(String confFile, List<ConfigOption<?>> defaults) {
         loadDefaults(defaults);
-
-        // TODO(sonia): throw an error with a clear message here when we cannot find the file
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(getClass().getResourceAsStream(confFile)));
         Yaml yaml = new Yaml();

@@ -1,6 +1,5 @@
 package inference.tensorflow;
 
-import inference.commons.GenericModel;
 import inference.commons.ScoringFunction;
 
 import java.util.ArrayList;
@@ -19,10 +18,5 @@ public class TensorflowScoring
     public ArrayList<ArrayList<Float>> processElement(ArrayList<ArrayList<Float>> batchedInput) throws Exception {
         ArrayList<ArrayList<Float>> batchedResult = this.model.apply(batchedInput);
         return batchedResult;
-    }
-
-    @Override
-    public void updateModel(GenericModel genericModel) {
-        System.out.println("Model update detected!" + genericModel);
     }
 }

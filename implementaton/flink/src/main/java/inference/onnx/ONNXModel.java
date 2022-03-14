@@ -62,36 +62,4 @@ public class ONNXModel extends GenericModel<ArrayList<Float>, ArrayList<Float>> 
         return result;
 
     }
-
-    //@Override
-    //public ArrayList<ArrayList<Float>> apply(ArrayList<ArrayList<Float>> input) throws Exception {
-    //    Map<String, OnnxTensor> onnxInputs = new HashMap<>();
-    //    System.out.println(input.size());
-    //    System.out.println(input.get(0).size());
-    //    int i = 0;
-    //    float[][][][] inputArr = new float[input.size()][1][28][28];
-    //    //for (ArrayList<Float> dd : input) {
-    //    //    int j = 0;
-    //    //    for (float f : dd) {
-    //    //        inputArr[i][0][j % 28][0] = f;
-    //    //    }
-    //    //    i++;
-    //    //}
-    //    OnnxTensor inputONNXTensor = OnnxTensor.createTensor(this.env, inputArr);
-    //    System.out.println(this.session.getInputInfo());
-    //    System.out.println(this.session.getNumOutputs());
-    //    onnxInputs.put("0", inputONNXTensor);
-    //
-    //    // Run the inputs through the ONNX model
-    //    this.session.run(onnxInputs);
-    //    //OnnxValue onnxValueResults = this.session.run(onnxInputs).get(0);
-    //    //float[][] onnxOutput = (float[][]) onnxValueResults.getValue();
-    //    //System.out.println(Arrays.deepToString(onnxOutput));
-    //
-    //    //ArrayList<Float> result = new ArrayList<>();
-    //    //for (float f : onnxOutput[0])
-    //    //    result.add(f);
-    //    //return result;
-    //    return null;
-    //}
 }
