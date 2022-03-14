@@ -26,16 +26,16 @@ public class ExperimentsRunner {
             System.out.println("====================================END======================================\n\n");
             Thread.sleep(5000);
 
-            //System.out.println("=====================BATCH SIZE EXPERIMENT " + experimentNum + "=====================");
-            //runCloseLoopExperiment(experimentTimeInSeconds, warmupRequestsNum, maxInputRatePerThread, embeddedApproach);
-            //System.out.println("====================================END======================================\n\n");
-            //Thread.sleep(5000);
-            //
-            //System.out.println("====================SCALABILITY EXPERIMENT " + experimentNum + "=====================");
-            //runScalabilityExperiment(experimentTimeInSeconds, warmupRequestsNum, maxInputRatePerThread,
-            //                         embeddedApproach);
-            //System.out.println("====================================END======================================\n\n");
-            //Thread.sleep(5000);
+            System.out.println("=====================BATCH SIZE EXPERIMENT " + experimentNum + "=====================");
+            runCloseLoopExperiment(experimentTimeInSeconds, warmupRequestsNum, maxInputRatePerThread, embeddedApproach);
+            System.out.println("====================================END======================================\n\n");
+            Thread.sleep(5000);
+
+            System.out.println("====================SCALABILITY EXPERIMENT " + experimentNum + "=====================");
+            runScalabilityExperiment(experimentTimeInSeconds, warmupRequestsNum, maxInputRatePerThread,
+                                     embeddedApproach);
+            System.out.println("====================================END======================================\n\n");
+            Thread.sleep(5000);
         }
         System.out.println("\n\n\nFinished experiments for " + embeddedApproach + "!");
     }

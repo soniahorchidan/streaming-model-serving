@@ -28,12 +28,6 @@ IS_SCALABILITY=${is_scalability_experiment:-false}
 # Archive twitch model
 if [[ $ARCHIVE == true ]]; then
   mkdir -p model_store/
-  ARCHIVED_TWITCH_MODEL_PATH=src/model_store/twitch-unsup-6-partitions.mar
-  if test -f "$ARCHIVED_TWITCH_MODEL_PATH"; then
-    echo "$ARCHIVED_TWITCH_MODEL_PATH already exists! Deleting existing model...."
-    rm $ARCHIVED_TWITCH_MODEL_PATH
-  fi
-  echo "Archiving model..."
   torch-model-archiver --model-name ffnn \
     --version 1.0 \
     --serialized-file ../../models/feedforward/torch/mnist-fashion/model-1/ffnn.torch \
@@ -46,7 +40,7 @@ sleep 5
 # Start PyTorch Model Serving
 echo "========================================================="
 echo "Starting PyTorch model serving..."
-torchserve --start --ncs --model-store model_store/ --ts-config src/torch_serve_handler/config.properties >logs.txt
+torchserve --start --ncs --model-store model_store/ --ts-config src/torch_serve_handler/config.properties > logs.txt
 sleep 5
 
 # Scale PyTorch Model Serving workers
