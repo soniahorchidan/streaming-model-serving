@@ -6,7 +6,6 @@ mvn clean install
 ./experiment.sh -model_replicas 1
 sleep 10
 
-
 # run scalability experiments
 declare -a model_replicas=(1 2 4 8 16)
 for replicas in "${model_replicas[@]}"; do
@@ -30,4 +29,3 @@ done
 
 # compute throughput and latency metrics
 python3 ./compute_metrics.py
-
