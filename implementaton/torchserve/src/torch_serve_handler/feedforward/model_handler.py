@@ -5,7 +5,6 @@ import torch
 
 import model
 
-MODEL_WEIGHTS = "/Users/sfhor/KTH/Programming/Git/streaming-model-serving/models/feedforward/torch/mnist-fashion/model-1/ffnn.torch"
 torch.set_num_threads(1)
 
 
@@ -32,7 +31,7 @@ class MNISTFashionClassifier(object):
 
         self.model = model.FFNN(input_size, num_hidden_layers, hidden_size, out_size=num_classes,
                                 accuracy_function=accuracy)
-        state_dict = torch.load(MODEL_WEIGHTS)
+        state_dict = torch.load("ffnn.torch")
         self.model.load_state_dict(state_dict)
         self.model.to(self.device)
         self.model.eval()

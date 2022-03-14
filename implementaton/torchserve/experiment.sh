@@ -30,10 +30,9 @@ if [[ $ARCHIVE == true ]]; then
   mkdir -p model_store/
   torch-model-archiver --model-name ffnn \
     --version 1.0 \
-    --serialized-file ../../models/feedforward/torch/mnist-fashion/model-1/ffnn.torch \
     --export-path model_store \
     --handler src/torch_serve_handler/feedforward/model_handler.py \
-    --extra-files src/torch_serve_handler/feedforward/model.py
+    --extra-files src/torch_serve_handler/feedforward/model.py,../../models/feedforward/torch/mnist-fashion/model-1/ffnn.torch
 fi
 sleep 5
 
