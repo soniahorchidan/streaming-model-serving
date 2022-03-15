@@ -3,7 +3,7 @@
 mvn clean install
 
 # run close and open loop experiments
-./experiment.sh -tmin_workers 1 -tmax_workers 1 -archive false
+./experiment.sh -tmin_workers 1 -tmax_workers 1 -archive true
 sleep 10
 
 # run scalability experiments

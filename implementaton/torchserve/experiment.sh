@@ -26,7 +26,8 @@ ARCHIVE=${archive:-false}
 IS_SCALABILITY=${is_scalability_experiment:-false}
 
 # Archive twitch model
-if [[ $ARCHIVE == true ]]; then
+if [[ $ARCHIVE == true && ! -d "model_store/" ]]; then
+  echo "Archiving PyTorch model..."
   mkdir -p model_store/
   torch-model-archiver --model-name ffnn \
     --version 1.0 \
