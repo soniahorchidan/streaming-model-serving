@@ -25,7 +25,7 @@ TORCH_MAX_WORKERS=${tmax_workers:-1}
 ARCHIVE=${archive:-false}
 IS_SCALABILITY=${is_scalability_experiment:-false}
 
-# Archive twitch model
+# Archive model
 if [[ $ARCHIVE == true && ! -d "model_store/" ]]; then
   echo "Archiving PyTorch model..."
   mkdir -p model_store/
